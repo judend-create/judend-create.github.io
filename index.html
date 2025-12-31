@@ -22,14 +22,13 @@ html, body {
   opacity: .8;
   animation: twinkle linear infinite;
 }
-
 @keyframes twinkle {
   0% { opacity: .3; }
   50% { opacity: 1; }
   100% { opacity: .3; }
 }
 
-/* 🎆 FIREWORKS */
+/* 🎆 FIREWORK */
 .firework {
   position: absolute;
   width: 6px;
@@ -37,94 +36,170 @@ html, body {
   border-radius: 50%;
   animation: explode 1.5s ease-out infinite;
 }
-
 @keyframes explode {
   0% { transform: scale(0); opacity: 1; }
   100% { transform: scale(15); opacity: 0; }
 }
 
-/* 💌 CARD */
-.card {
-  position: relative;
-  z-index: 10;
-  background: rgba(255,255,255,0.95);
-  max-width: 420px;
-  width: 90%;
+/* 🃏 CARD */
+.card-container {
+  perspective: 1200px;
+  width: 320px;
+  height: 420px;
   margin: auto;
+  position: relative;
   top: 50%;
   transform: translateY(-50%);
-  padding: 2.5rem 2rem;
+  z-index: 10;
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1.2s ease;
+}
+
+.card.open {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
   border-radius: 24px;
-  text-align: center;
-  color: #2c1a47;
   box-shadow: 0 25px 60px rgba(0,0,0,.4);
 }
 
-h1 {
-  margin-bottom: 1.2rem;
-  font-size: 2.2rem;
+/* FRONT */
+.card-front {
+  background: linear-gradient(135deg, #6b4eff, #b983ff);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
 }
 
-/* ✍️ TYPING */
+/* BACK */
+.card-back {
+  background: white;
+  transform: rotateY(180deg);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  color: #2c1a47;
+}
+
 #text {
-  font-size: 1.05rem;
-  line-height: 1.75;
+  font-size: 1rem;
+  line-height: 1.7;
   white-space: pre-line;
+  margin-top: .5rem;
+}
+
+/* 🎵 BUTTON */
+.music-btn {
+  margin-top: 1rem;
+  padding: .6rem 1.4rem;
+  border-radius: 20px;
+  border: none;
+  background: #6b4eff;
+  color: white;
+  display: none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="card">
-  <h1>✨ Happy New Year ✨</h1>
-  <div id="text"></div>
+<div class="card-container" onclick="openCard()">
+  <div class="card" id="card">
+    <div class="card-face card-front">
+      Tap to open 🎆
+    </div>
+    <div class="card-face card-back">
+      <h2>✨ Happy New Year ✨</h2>
+      <div id="text"></div>
+      <button class="music-btn" id="musicBtn" onclick="toggleMusic(event)">
+        🎵 Play Song
+      </button>
+    </div>
+  </div>
 </div>
+
+<!-- 🎵 MUSIC -->
+<audio id="music" loop>
+  <source src="https://drive.google.com/uc?export=download&id=1mbyFg7iqgkaUyft0ox5xJ4gdDL3rAlJ3" type="audio/mpeg">
+</audio>
 
 <script>
 // 🌟 STARS
 for (let i = 0; i < 80; i++) {
-  const star = document.createElement("div");
-  star.className = "star";
-  star.style.width = star.style.height = Math.random() * 2 + "px";
-  star.style.left = Math.random() * 100 + "vw";
-  star.style.top = Math.random() * 100 + "vh";
-  star.style.animationDuration = Math.random() * 3 + 2 + "s";
-  document.body.appendChild(star);
+  const s = document.createElement("div");
+  s.className = "star";
+  s.style.width = s.style.height = Math.random() * 2 + "px";
+  s.style.left = Math.random() * 100 + "vw";
+  s.style.top = Math.random() * 100 + "vh";
+  s.style.animationDuration = Math.random() * 3 + 2 + "s";
+  document.body.appendChild(s);
 }
 
 // 🎆 FIREWORKS
 setInterval(() => {
-  const fw = document.createElement("div");
-  fw.className = "firework";
-  fw.style.background = `hsl(${Math.random()*360},100%,70%)`;
-  fw.style.left = Math.random() * 100 + "vw";
-  fw.style.top = Math.random() * 50 + "vh";
-  document.body.appendChild(fw);
-  setTimeout(() => fw.remove(), 1500);
-}, 700);
+  const f = document.createElement("div");
+  f.className = "firework";
+  f.style.background = `hsl(${Math.random()*360},100%,70%)`;
+  f.style.left = Math.random() * 100 + "vw";
+  f.style.top = Math.random() * 50 + "vh";
+  document.body.appendChild(f);
+  setTimeout(() => f.remove(), 1500);
+}, 800);
 
-// ✍️ TYPING EFFECT
+// 🃏 OPEN CARD + TYPE
+let opened = false;
 const message = `Happy New Year!
 
-I’m truly grateful to God for letting me meet you this year.
-Getting to know you has been such a pleasant surprise. You’re fun, easy-going, and genuinely enjoyable to be around.
-In 2026, I hope you’re blessed with good health, a long life, and overflowing happiness.
-I hope you’re always surrounded by kind people, because you are just as kind yourself.
-I also hope that every problem from 2025 never finds its way into your 2026 — you don’t deserve any of that.
-All my good prayers will stay with you throughout the year.
-Once again, Happy New Year!
-May today and all the days ahead become the best days of your life.`;
+I’m truly grateful to God for letting me meet you this year. Getting to know you has been such a pleasant surprise, you’re fun, easy-going, and genuinely enjoyable to be around. 
+
+In 2026, I hope you’re blessed with good health, a long life, and overflowing happiness. May all your days ahead be gentle and kind. Once again, happy new year. May today and all the days after be your best ones
+
+Sincerely, Jude.`;
 
 let i = 0;
+
+function openCard() {
+  if (opened) return;
+  opened = true;
+  document.getElementById("card").classList.add("open");
+  setTimeout(typeText, 800);
+}
+
 function typeText() {
   if (i < message.length) {
     document.getElementById("text").innerHTML += message.charAt(i);
     i++;
     setTimeout(typeText, 30);
+  } else {
+    document.getElementById("musicBtn").style.display = "inline-block";
   }
 }
-typeText();
+
+// 🎵 MUSIC
+const music = document.getElementById("music");
+let playing = false;
+function toggleMusic(e) {
+  e.stopPropagation();
+  if (!playing) {
+    music.play();
+    playing = true;
+  } else {
+    music.pause();
+    playing = false;
+  }
+}
 </script>
 
 </body>
