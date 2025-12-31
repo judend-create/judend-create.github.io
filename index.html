@@ -1,118 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Happy New Year</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
   height: 100vh;
-  background: radial-gradient(circle at top, #0b1d3a, #040b18);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: radial-gradient(circle at top, #0b1d3a, #020b1a);
   overflow: hidden;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-/* ⭐ STARS */
+/* BINTANG */
 .star {
   position: absolute;
   width: 2px;
   height: 2px;
   background: white;
-  opacity: .6;
-  animation: twinkle 3s infinite alternate;
+  opacity: .8;
+  animation: twinkle 2s infinite alternate;
 }
 @keyframes twinkle {
-  from { opacity: .2; }
+  from { opacity: .3; }
   to { opacity: 1; }
 }
 
-/* ✉️ ENVELOPE */
+/* CONTAINER */
+.wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* AMPL0P */
 .envelope {
-  width: 320px;
-  height: 200px;
+  width: 280px;
+  height: 180px;
   position: relative;
   cursor: pointer;
-  z-index: 5;
+  z-index: 10;
 }
 
-.envelope .back {
-  position: absolute;
+.env-body {
   width: 100%;
   height: 100%;
-  background: #2f6cff;
-  border-radius: 14px;
+  background: #4f83ff;
+  border-radius: 0 0 12px 12px;
 }
 
-.envelope .flap {
+.env-flap {
   position: absolute;
+  top: 0;
   width: 0;
   height: 0;
-  border-left: 160px solid transparent;
-  border-right: 160px solid transparent;
-  border-bottom: 100px solid #4f87ff;
-  top: 0;
+  border-left: 140px solid transparent;
+  border-right: 140px solid transparent;
+  border-bottom: 90px solid #3b6fe0;
   transform-origin: top;
-  transition: transform 1s ease;
-  z-index: 3;
+  transition: transform .8s ease;
+  z-index: 11;
 }
 
-.envelope.open .flap {
+.envelope.open .env-flap {
   transform: rotateX(180deg);
 }
 
-/* 💌 CARD */
+/* KARTU */
 .card {
   position: absolute;
-  width: 280px;
-  height: 360px;
+  width: 260px;
+  height: 340px;
   background: white;
-  border-radius: 20px;
+  border-radius: 16px;
+  padding: 20px;
   top: 20px;
-  left: 20px;
-  padding: 1.8rem 1.4rem;
-  text-align: center;
-  transform: translateY(140px);
   opacity: 0;
-  transition: all 1.2s ease;
-  z-index: 2;
+  transform: translateY(40px);
+  transition: all 1s ease;
+  z-index: 5;
 }
 
-.envelope.open .card {
-  transform: translateY(-220px);
+.envelope.open + .card {
   opacity: 1;
+  transform: translateY(-160px);
 }
 
+/* TEXT */
 h2 {
-  margin-top: 0;
-  color: #1f2a44;
-}
-
-#message {
-  font-size: .95rem;
-  line-height: 1.6;
-  color: #3a4a6b;
-  margin-top: .5rem;
-  white-space: pre-line;
-}
-
-/* 👆 HINT */
-.hint {
-  position: absolute;
-  bottom: -42px;
-  width: 100%;
   text-align: center;
-  color: #fff;
-  font-size: .85rem;
-  opacity: .8;
+}
+#text {
+  white-space: pre-line;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.hint {
+  text-align: center;
+  color: #ccc;
+  margin-top: 20px;
 }
 </style>
 </head>
@@ -120,51 +110,62 @@ h2 {
 <body>
 
 <script>
-// ⭐ STARS
-for (let i = 0; i < 90; i++) {
-  const s = document.createElement("div");
-  s.className = "star";
-  s.style.left = Math.random() * 100 + "vw";
-  s.style.top = Math.random() * 100 + "vh";
-  s.style.animationDelay = Math.random() * 3 + "s";
+for (let i = 0; i < 80; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.left = Math.random()*100 + '%';
+  s.style.top = Math.random()*100 + '%';
+  s.style.animationDelay = Math.random()*2 + 's';
   document.body.appendChild(s);
 }
 </script>
 
-<div class="envelope" onclick="openEnvelope()">
-  <div class="back"></div>
-  <div class="flap"></div>
+<div class="wrapper">
+  <div class="envelope" id="env">
+    <div class="env-flap"></div>
+    <div class="env-body"></div>
+  </div>
 
   <div class="card">
     <h2>✨ Happy New Year ✨</h2>
-    <div id="message"></div>
+    <div id="text"></div>
   </div>
-
-  <div class="hint">Tap the envelope 💌</div>
 </div>
 
+<div class="hint">Ketuk amplopnya 💌</div>
+
 <script>
-let opened = false;
-const text = `I’m truly grateful to God for letting me meet you this year. Getting to know you has been such a pleasant surprise . You’re fun, easy going, and genuinely enjoyable to be around.
+const env = document.getElementById('env');
+const textEl = document.getElementById('text');
 
-In 2026, I hope you’re blessed with good health, a long life, and overflowing happiness. May today and all the days after be your very best ones.
+const message = `Happy New Year!
+I thank God for letting me meet you this year.
+Getting to know you has been such a pleasant surprise.
+You’re fun, easygoing, and genuinely kind.
 
-Sincerely, Jude. `;
+In 2026, I wish you good health,
+a long life, and endless happiness.
+May you always be surrounded by good people,
+just as good as you are.
 
-let index = 0;
+May all the troubles of 2025 never find you again.
+All my best wishes will walk with you all year long.
+Once again, happy new year, may today and every day after be your best days.
 
-function openEnvelope() {
-  if (opened) return;
-  opened = true;
-  document.querySelector(".envelope").classList.add("open");
-  setTimeout(typeText, 1200);
-}
+Sincerely, Jude`;
+
+let i = 0;
+env.onclick = () => {
+  if (env.classList.contains('open')) return;
+  env.classList.add('open');
+  setTimeout(typeText, 900);
+};
 
 function typeText() {
-  if (index < text.length) {
-    document.getElementById("message").innerHTML += text.charAt(index);
-    index++;
-    setTimeout(typeText, 28);
+  if (i < message.length) {
+    textEl.innerHTML += message.charAt(i);
+    i++;
+    setTimeout(typeText, 30);
   }
 }
 </script>
