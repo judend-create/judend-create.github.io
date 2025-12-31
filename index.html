@@ -6,205 +6,167 @@
 <title>Happy New Year</title>
 
 <style>
-html, body {
+* {
+  box-sizing: border-box;
+}
+
+body {
   margin: 0;
-  height: 100%;
-  background: radial-gradient(circle at top, #1b0036, #090014);
+  height: 100vh;
+  background: radial-gradient(circle at top, #0b1d3a, #040b18);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
   font-family: 'Poppins', sans-serif;
 }
 
-/* 🌟 STARS */
+/* ⭐ STARS */
 .star {
   position: absolute;
+  width: 2px;
+  height: 2px;
   background: white;
-  border-radius: 50%;
-  opacity: .8;
-  animation: twinkle linear infinite;
+  opacity: .6;
+  animation: twinkle 3s infinite alternate;
 }
 @keyframes twinkle {
-  0% { opacity: .3; }
-  50% { opacity: 1; }
-  100% { opacity: .3; }
+  from { opacity: .2; }
+  to { opacity: 1; }
 }
 
-/* 🎆 FIREWORK */
-.firework {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  animation: explode 1.5s ease-out infinite;
-}
-@keyframes explode {
-  0% { transform: scale(0); opacity: 1; }
-  100% { transform: scale(15); opacity: 0; }
-}
-
-/* 🃏 CARD */
-.card-container {
-  perspective: 1200px;
+/* ✉️ ENVELOPE */
+.envelope {
   width: 320px;
-  height: 420px;
-  margin: auto;
+  height: 200px;
   position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
+  cursor: pointer;
+  z-index: 5;
 }
 
-.card {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 1.2s ease;
-}
-
-.card.open {
-  transform: rotateY(180deg);
-}
-
-.card-face {
+.envelope .back {
   position: absolute;
   width: 100%;
   height: 100%;
-  backface-visibility: hidden;
-  border-radius: 24px;
-  box-shadow: 0 25px 60px rgba(0,0,0,.4);
+  background: #2f6cff;
+  border-radius: 14px;
 }
 
-/* FRONT */
-.card-front {
-  background: linear-gradient(135deg, #6b4eff, #b983ff);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.2rem;
+.envelope .flap {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 160px solid transparent;
+  border-right: 160px solid transparent;
+  border-bottom: 100px solid #4f87ff;
+  top: 0;
+  transform-origin: top;
+  transition: transform 1s ease;
+  z-index: 3;
 }
 
-/* BACK */
-.card-back {
+.envelope.open .flap {
+  transform: rotateX(180deg);
+}
+
+/* 💌 CARD */
+.card {
+  position: absolute;
+  width: 280px;
+  height: 360px;
   background: white;
-  transform: rotateY(180deg);
-  padding: 2rem 1.5rem;
-  text-align: center;
-  color: #2c1a47;
-}
-
-#text {
-  font-size: 1rem;
-  line-height: 1.7;
-  white-space: pre-line;
-  margin-top: .5rem;
-}
-
-/* 🎵 BUTTON */
-.music-btn {
-  margin-top: 1rem;
-  padding: .6rem 1.4rem;
   border-radius: 20px;
-  border: none;
-  background: #6b4eff;
-  color: white;
-  display: none;
+  top: 20px;
+  left: 20px;
+  padding: 1.8rem 1.4rem;
+  text-align: center;
+  transform: translateY(140px);
+  opacity: 0;
+  transition: all 1.2s ease;
+  z-index: 2;
+}
+
+.envelope.open .card {
+  transform: translateY(-220px);
+  opacity: 1;
+}
+
+h2 {
+  margin-top: 0;
+  color: #1f2a44;
+}
+
+#message {
+  font-size: .95rem;
+  line-height: 1.6;
+  color: #3a4a6b;
+  margin-top: .5rem;
+  white-space: pre-line;
+}
+
+/* 👆 HINT */
+.hint {
+  position: absolute;
+  bottom: -42px;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  font-size: .85rem;
+  opacity: .8;
 }
 </style>
 </head>
 
 <body>
 
-<div class="card-container" onclick="openCard()">
-  <div class="card" id="card">
-    <div class="card-face card-front">
-      Tap to open 🎆
-    </div>
-    <div class="card-face card-back">
-      <h2>✨ Happy New Year ✨</h2>
-      <div id="text"></div>
-      <button class="music-btn" id="musicBtn" onclick="toggleMusic(event)">
-        🎵 Play Song
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- 🎵 MUSIC -->
-<audio id="music" loop>
-  <source src="https://drive.google.com/uc?export=download&id=1mbyFg7iqgkaUyft0ox5xJ4gdDL3rAlJ3" type="audio/mpeg">
-</audio>
-
 <script>
-// 🌟 STARS
-for (let i = 0; i < 80; i++) {
+// ⭐ STARS
+for (let i = 0; i < 90; i++) {
   const s = document.createElement("div");
   s.className = "star";
-  s.style.width = s.style.height = Math.random() * 2 + "px";
   s.style.left = Math.random() * 100 + "vw";
   s.style.top = Math.random() * 100 + "vh";
-  s.style.animationDuration = Math.random() * 3 + 2 + "s";
+  s.style.animationDelay = Math.random() * 3 + "s";
   document.body.appendChild(s);
 }
+</script>
 
-// 🎆 FIREWORKS
-setInterval(() => {
-  const f = document.createElement("div");
-  f.className = "firework";
-  f.style.background = `hsl(${Math.random()*360},100%,70%)`;
-  f.style.left = Math.random() * 100 + "vw";
-  f.style.top = Math.random() * 50 + "vh";
-  document.body.appendChild(f);
-  setTimeout(() => f.remove(), 1500);
-}, 800);
+<div class="envelope" onclick="openEnvelope()">
+  <div class="back"></div>
+  <div class="flap"></div>
 
-// 🃏 OPEN CARD + TYPE
+  <div class="card">
+    <h2>✨ Happy New Year ✨</h2>
+    <div id="message"></div>
+  </div>
+
+  <div class="hint">Tap the envelope 💌</div>
+</div>
+
+<script>
 let opened = false;
-const message = `Happy New Year!
+const text = `I’m truly grateful to God for letting me meet you this year. Getting to know you has been such a pleasant surprise . You’re fun, easy going, and genuinely enjoyable to be around.
 
-I’m truly grateful to God for letting me meet you this year. Getting to know you has been such a pleasant surprise, you’re fun, easy-going, and genuinely enjoyable to be around. 
+In 2026, I hope you’re blessed with good health, a long life, and overflowing happiness. May today and all the days after be your very best ones.
 
-In 2026, I hope you’re blessed with good health, a long life, and overflowing happiness. May all your days ahead be gentle and kind. Once again, happy new year. May today and all the days after be your best ones
+Sincerely, Jude. `;
 
-Sincerely, Jude.`;
+let index = 0;
 
-let i = 0;
-
-function openCard() {
+function openEnvelope() {
   if (opened) return;
   opened = true;
-  document.getElementById("card").classList.add("open");
-  setTimeout(typeText, 800);
+  document.querySelector(".envelope").classList.add("open");
+  setTimeout(typeText, 1200);
 }
 
 function typeText() {
-  if (i < message.length) {
-    document.getElementById("text").innerHTML += message.charAt(i);
-    i++;
-    setTimeout(typeText, 30);
-  } else {
-    document.getElementById("musicBtn").style.display = "inline-block";
+  if (index < text.length) {
+    document.getElementById("message").innerHTML += text.charAt(index);
+    index++;
+    setTimeout(typeText, 28);
   }
 }
-
-// 🎵 MUSIC
-const music = document.getElementById("music");
-let playing = false 
-  function toggleMusic(e) {
-  e.stopPropagation();
-
-  music.load(); // https://drive.google.com/uc?export=download&id=1mbyFg7iqgkaUyft0ox5xJ4gdDL3rAlJ3
-
-  if (!playing) {
-    music.play().catch(() => {
-      alert("Tap once more to enable sound 🎵");
-    });
-    playing = true;
-  } else {
-    music.pause();
-    playing = false;
-  }
-  }
 </script>
 
 </body>
