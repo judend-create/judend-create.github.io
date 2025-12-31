@@ -189,17 +189,22 @@ function typeText() {
 
 // 🎵 MUSIC
 const music = document.getElementById("music");
-let playing = false;
-function toggleMusic(e) {
+let playing = false 
+  function toggleMusic(e) {
   e.stopPropagation();
+
+  music.load(); // https://drive.google.com/uc?export=download&id=1mbyFg7iqgkaUyft0ox5xJ4gdDL3rAlJ3
+
   if (!playing) {
-    music.play();
+    music.play().catch(() => {
+      alert("Tap once more to enable sound 🎵");
+    });
     playing = true;
   } else {
     music.pause();
     playing = false;
   }
-}
+  }
 </script>
 
 </body>
